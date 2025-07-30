@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pytesseract
 
 img = cv2.imread('images/test_image.png')
 
@@ -61,10 +62,14 @@ output = test.copy()
 # Draw the boxes
 for (x, y, w, h) in valid_boxes:
     cv2.rectangle(output, (x, y), (x+w, y+h), (0, 255, 0), 2)  # green box
+    roi = img[y:y+h, x:x+w]
+    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    
+    text = pytesseract.image_to_string(thresh, config='--psm 6')
+    print("Extracted text:\n", text.strip())
 
 # Show the image
 cv2.imshow("Valid Boxes", output)
 cv2.waitKey(3000)
 cv2.destroyAllWindows()
-
-print(img)
