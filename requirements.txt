@@ -3,3 +3,4 @@ numpy
 pandas
 pytesseract
 openpyxl
+pdf2image
